@@ -1,0 +1,53 @@
+{
+  "name": "ts-eslint-prettier-jest-minimal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "analize": "npm run lint:fix && npm run compile",
+    "compile": "tsc --noEmit",
+    "compile:watch": "npm run compile -- --watch",
+    "compile:build": "tsc -b",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:watch": "esw --color --watch",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier --config .prettierrc '**/*.+(ts|tsx)'",
+    "format:fix": "npm run format -- --write",
+    "test": "jest --verbose",
+    "test:watch": "npm run test -- --watchAll",
+    "test:coverage": "npm run test -- --coverage",
+    "check-updates": "ncu -u"
+  },
+  "author": "Softwarecrafters.io",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "@typescript-eslint/parser": "^5.57.0",
+    "eslint": "^8.37.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-watch": "^8.0.0",
+    "husky": "^8.0.3",
+    "jest": "^29.5.0",
+    "lint-staged": "^13.2.0",
+    "npm-check-updates": "^16.9.0",
+    "prettier": "^2.8.7",
+    "ts-jest": "^29.0.5",
+    "typescript": "^5.0.3",
+    "@types/node": "^18.15.11"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run test"
+    }
+  },
+  "lint-staged": {
+    "*.+(ts|tsx)": [
+      "npm run lint:fix",
+      "npm run compile",
+      "git add . "
+    ]
+  }
+}
