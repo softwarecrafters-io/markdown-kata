@@ -5,8 +5,11 @@
         "moduleResolution": "node",
         "jsx": "react",
         "noImplicitAny": false,
-        "sourceMap": true, 
-        "outDir":"./lib/"
+        "sourceMap": true,
+        "outDir":"./lib/",
+        "lib": [
+            "ES2021.String",
+        ]
     },
     "include": [
         "src/**/*"

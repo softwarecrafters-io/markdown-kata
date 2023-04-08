@@ -1,4 +1,4 @@
-# Markdown Kata
+# Markdown Transformation Kata
 
 Plantilla base para practicar las katas del curso o para empezar un proyecto nuevo.
 
