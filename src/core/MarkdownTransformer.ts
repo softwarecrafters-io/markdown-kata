@@ -1,4 +1,4 @@
-
+import { MarkdownLink } from "./MarkdownLink";
 
 export class MarkdownTransformer {
   private constructor(private readonly markdownText: string) {}
@@ -15,7 +15,7 @@ export class MarkdownTransformer {
     return this.appendFootnotesToMarkdown(transformedMarkdown, footnotes);
   }
 
-  findAllLinks(markdownText:string) {
+  private findAllLinks(markdownText:string) {
     const linkRegex = /\[([^\]]+)\]\(([^\)]+)\)/g;
     const matchesAsList = Array.from(markdownText.matchAll(linkRegex));
     const links = matchesAsList.map(match => MarkdownLink.create(match[1], match[2]));
@@ -27,14 +27,14 @@ export class MarkdownTransformer {
       links.findIndex(l => l.toEqual(link)) === index);
   }
 
-  generateLinksRecord(links:MarkdownLink[]): Record<string, MarkdownLink> {
+  private generateLinksRecord(links:MarkdownLink[]): Record<string, MarkdownLink> {
     const recordReducer = (previous:Record<string, MarkdownLink>, current:MarkdownLink, index:number) =>
       ({ ...previous, [`[^anchor${index + 1}]`]: current });
 
     return links.reduce(recordReducer, {});
   }
 
-  replaceLinksByAnchors(markdownContent: string, linksRecord: Record<string, MarkdownLink>) {
+  private replaceLinksByAnchors(markdownContent: string, linksRecord: Record<string, MarkdownLink>) {
     const replaceLinkWithAnchor = (content:string, key:string) =>
       content.replaceAll(linksRecord[key].toAnchorFormat(), `${linksRecord[key].text} ${key}`);
 
@@ -42,7 +42,7 @@ export class MarkdownTransformer {
       .reduce(replaceLinkWithAnchor, markdownContent);
   }
 
-  generateFootnotes(linksRecord: Record<string, MarkdownLink>) {
+  private generateFootnotes(linksRecord: Record<string, MarkdownLink>) {
     const anchorToFootnote = (footnoteKey: string) =>
       `${footnoteKey}: ${linksRecord[footnoteKey].url}`;
 
@@ -50,23 +50,7 @@ export class MarkdownTransformer {
       .map(anchorToFootnote);
   }
 
-  appendFootnotesToMarkdown(markdownContent: string, footnotes: string[]) {
+  private appendFootnotesToMarkdown(markdownContent: string, footnotes: string[]):string {
     return [markdownContent, ...footnotes].join("\n\n");
-  }
-}
-
-export class MarkdownLink {
-  private constructor(readonly text: string, readonly url: string) {}
-
-  static create(text: string, url: string) {
-    return new MarkdownLink(text, url);
-  }
-
-  toEqual(other: MarkdownLink) {
-    return this.text === other.text && this.url === other.url;
-  }
-
-  toAnchorFormat() {
-    return `[${this.text}](${this.url})`;
   }
 }
